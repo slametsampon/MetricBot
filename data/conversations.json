@@ -1,0 +1,22 @@
+[
+  {
+    "user": "Bagaimana cara merawat kompresor?",
+    "bot": "Untuk perawatan kompresor, Anda perlu memeriksa tekanan udara secara rutin, membersihkan filter udara, dan mengganti oli setiap 1000 jam kerja atau sesuai rekomendasi pabrik."
+  },
+  {
+    "user": "Apa standar SHE untuk pengelasan di area pabrik?",
+    "bot": "Standar SHE untuk pengelasan di area pabrik meliputi penggunaan alat pelindung diri (APD) seperti kacamata pelindung, sarung tangan tahan panas, serta memastikan ventilasi yang cukup untuk menghindari asap berbahaya."
+  },
+  {
+    "user": "Langkah troubleshooting jika pompa berhenti beroperasi?",
+    "bot": "Langkah pertama, periksa sumber daya listrik ke pompa. Jika terhubung, cek apakah ada gangguan mekanis seperti keausan impeller atau kebuntuan di saluran pipa. Jika masalah berlanjut, hubungi teknisi untuk pemeriksaan lebih lanjut."
+  },
+  {
+    "user": "Apa saja dokumen penting untuk melakukan pemeliharaan berkala?",
+    "bot": "Dokumen penting meliputi manual mesin, catatan pemeliharaan sebelumnya, jadwal pemeliharaan yang disarankan, serta lembar inspeksi yang telah diisi selama pengecekan rutin."
+  },
+  {
+    "user": "Apa saja tipe pelumas yang digunakan untuk mesin besar?",
+    "bot": "Tipe pelumas yang digunakan untuk mesin besar biasanya adalah pelumas berbasis minyak mineral atau sintetik. Pastikan menggunakan pelumas dengan viskositas yang direkomendasikan oleh pabrik mesin."
+  }
+]
