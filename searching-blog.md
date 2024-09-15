@@ -47,13 +47,13 @@ Berikut ringkasan langkah-langkah untuk menambahkan fitur pencarian blog pada si
     - [3.2. **Menambahkan Pembantu untuk Formatting**](#32-menambahkan-pembantu-untuk-formatting)
   - [4. **Mengintegrasikan Utilitas dalam Komponen**](#4-mengintegrasikan-utilitas-dalam-komponen)
   - [Kesimpulan](#kesimpulan-1)
-  - [5. **Style dengan Tailwind CSS**](#5-style-dengan-tailwind-css)
+- [5. **Style dengan Tailwind CSS**](#5-style-dengan-tailwind-css)
   - [1. **Menyiapkan Tailwind CSS**](#1-menyiapkan-tailwind-css)
   - [2. **Menerapkan Styling pada Input Pencarian**](#2-menerapkan-styling-pada-input-pencarian)
   - [3. **Menambahkan Styling pada Hasil Pencarian**](#3-menambahkan-styling-pada-hasil-pencarian)
   - [4. **Menerapkan Tampilan Responsif**](#4-menerapkan-tampilan-responsif)
-- [Kesimpulan](#kesimpulan-2)
-  - [6. **Integrasi ke dalam Menu MetricBot**](#6-integrasi-ke-dalam-menu-metricbot)
+  - [Kesimpulan](#kesimpulan-2)
+- [6. **Integrasi ke dalam Menu MetricBot**](#6-integrasi-ke-dalam-menu-metricbot)
   - [1. **Menyiapkan Komponen Navigasi**](#1-menyiapkan-komponen-navigasi)
     - [1.1. **Membuat Komponen Navigasi (Jika Belum Ada)**](#11-membuat-komponen-navigasi-jika-belum-ada)
   - [2. **Menambahkan Halaman untuk MetricBot**](#2-menambahkan-halaman-untuk-metricbot)
@@ -64,6 +64,17 @@ Berikut ringkasan langkah-langkah untuk menambahkan fitur pencarian blog pada si
     - [4.1. **Menggunakan Navigasi di Halaman Utama**](#41-menggunakan-navigasi-di-halaman-utama)
   - [5. **Mengujinya**](#5-mengujinya)
   - [Kesimpulan](#kesimpulan-3)
+- [7. **Langkah Integrasi ChatBot dengan App Routing**](#7-langkah-integrasi-chatbot-dengan-app-routing)
+  - [1. **Menyiapkan Endpoint API untuk Pencarian Blog**](#1-menyiapkan-endpoint-api-untuk-pencarian-blog)
+    - [1.1. **Membuat Endpoint API di App Routing**](#11-membuat-endpoint-api-di-app-routing)
+  - [2. **Menyiapkan ChatBot untuk Menggunakan API**](#2-menyiapkan-chatbot-untuk-menggunakan-api)
+    - [2.1. **Menambahkan Integrasi API dalam ChatBot**](#21-menambahkan-integrasi-api-dalam-chatbot)
+  - [3. **Menyesuaikan Routing untuk Halaman ChatBot**](#3-menyesuaikan-routing-untuk-halaman-chatbot)
+    - [3.1. **Menambahkan Halaman MetricBot**](#31-menambahkan-halaman-metricbot)
+  - [4. **Mengintegrasikan Navigasi**](#4-mengintegrasikan-navigasi)
+    - [4.1. **Mengupdate Navigasi**](#41-mengupdate-navigasi)
+  - [5. **Mengujinya**](#5-mengujinya-1)
+  - [Kesimpulan](#kesimpulan-4)
 
 ### 1. **Setup Data Blog dengan next-contentlayer**
 Langkah pertama dalam mengintegrasikan fitur pencarian blog di MetricBot adalah **Setup Data Blog dengan next-contentlayer**. Berikut penjelasan lengkap dan detail mengenai cara mengaturnya:
@@ -722,7 +733,7 @@ Pada langkah ini, kita:
 - Mengintegrasikan fungsi-fungsi ini ke dalam komponen sehingga data dapat diproses dan ditampilkan dengan lebih baik.
 
 
-#### 5. **Style dengan Tailwind CSS**
+### 5. **Style dengan Tailwind CSS**
 
 Tailwind CSS adalah framework utility-first yang memungkinkan kita untuk membuat desain dengan cepat dan konsisten dengan menggunakan kelas-kelas utility. Pada langkah ini, kita akan mengatur tampilan fitur pencarian menggunakan Tailwind CSS, termasuk styling untuk input pencarian, hasil pencarian, dan memastikan tampilan responsif.
 
@@ -870,7 +881,7 @@ Gunakan kelas-kelas responsif Tailwind CSS untuk memastikan bahwa elemen pencari
 - **`focus:outline-none focus:ring-2 focus:ring-blue-500`**: Menambahkan efek fokus dengan ring biru pada input.
 - **`hover:bg-gray-100 transition duration-150 ease-in-out`**: Menambahkan efek hover dengan perubahan warna latar belakang pada hasil pencarian.
 
-### Kesimpulan
+#### Kesimpulan
 
 Pada langkah ini, kita telah menggunakan Tailwind CSS untuk:
 - Mengatur styling input pencarian.
@@ -879,7 +890,7 @@ Pada langkah ini, kita telah menggunakan Tailwind CSS untuk:
 
 
 
-#### 6. **Integrasi ke dalam Menu MetricBot**
+### 6. **Integrasi ke dalam Menu MetricBot**
 
 Pada langkah ini, kita akan menambahkan menu **MetricBot** ke bagian navigasi situs sehingga pengguna dapat mengakses fitur pencarian dengan mudah. Kita akan memastikan bahwa menu ini terintegrasi dengan baik dengan navigasi situs yang ada dan dapat diakses dengan mudah oleh pengguna.
 
@@ -1021,3 +1032,179 @@ Pada langkah ini, kita telah:
 - Membuat halaman **MetricBot** yang menampilkan fitur pencarian.
 - Memperbarui navigasi untuk mengarah ke halaman **MetricBot**.
 - Mengintegrasikan navigasi ke halaman utama dan mengujinya.
+
+
+### 7. **Langkah Integrasi ChatBot dengan App Routing**
+
+#### 1. **Menyiapkan Endpoint API untuk Pencarian Blog**
+
+Pada app routing, endpoint API diletakkan di dalam folder **`/app/api`** dan bukan di **`/pages/api`**.
+
+##### 1.1. **Membuat Endpoint API di App Routing**
+
+Buat file API di **`/app/api/search/route.ts`**:
+
+```ts
+// app/api/search/route.ts
+import { NextResponse } from 'next/server';
+import { searchBlogs } from '../../../lib/searchUtils';
+
+export async function GET(request: Request) {
+  const url = new URL(request.url);
+  const query = url.searchParams.get('query');
+
+  if (!query) {
+    return NextResponse.json({ error: 'Query parameter is required' }, { status: 400 });
+  }
+
+  const results = searchBlogs(query);
+  return NextResponse.json(results);
+}
+```
+
+Endpoint ini menerima parameter query dari URL dan mengembalikan hasil pencarian dalam format JSON.
+
+#### 2. **Menyiapkan ChatBot untuk Menggunakan API**
+
+Integrasikan API ke dalam ChatBot dengan menggunakan **`fetch`** untuk mengakses endpoint pencarian.
+
+##### 2.1. **Menambahkan Integrasi API dalam ChatBot**
+
+Misalnya, di **`/app/components/MetricBot/MetricBot.tsx`**:
+
+```tsx
+// app/components/MetricBot/MetricBot.tsx
+import React, { useState } from 'react';
+import { Configuration, OpenAIApi } from 'openai';
+
+const openai = new OpenAIApi(new Configuration({
+  apiKey: process.env.OPENAI_API_KEY,
+}));
+
+const MetricBot: React.FC = () => {
+  const [userInput, setUserInput] = useState('');
+  const [chatOutput, setChatOutput] = useState('');
+
+  const handleUserInput = async (input: string) => {
+    // Memanggil OpenAI untuk mendapatkan respons
+    const completion = await openai.createCompletion({
+      model: 'text-davinci-003',
+      prompt: `User input: ${input}\nChatBot response:`,
+      max_tokens: 150,
+    });
+
+    const response = completion.data.choices[0]?.text?.trim() || '';
+    setChatOutput(response);
+
+    // Jika respons mengindikasikan pencarian blog
+    if (response.toLowerCase().includes('cari blog')) {
+      const searchQuery = extractQueryFromResponse(response);
+      const searchResults = await fetch(`/api/search?query=${encodeURIComponent(searchQuery)}`).then(res => res.json());
+      setChatOutput(formatSearchResults(searchResults));
+    }
+  };
+
+  const extractQueryFromResponse = (response: string) => {
+    // Ekstrak query dari respons (misalnya, dengan regex atau parsing sederhana)
+    return response.split('cari blog:')[1]?.trim() || '';
+  };
+
+  const formatSearchResults = (results: any[]) => {
+    // Format hasil pencarian untuk ditampilkan
+    return results.map(result => `${result.title}: ${result.summary}`).join('\n');
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        placeholder="Tulis pertanyaan..."
+        className="w-full p-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+      <button onClick={() => handleUserInput(userInput)} className="mt-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
+        Kirim
+      </button>
+      <div className="mt-4">{chatOutput}</div>
+    </div>
+  );
+};
+
+export default MetricBot;
+```
+
+#### 3. **Menyesuaikan Routing untuk Halaman ChatBot**
+
+Pada **app routing**, pastikan halaman ChatBot ditambahkan dengan benar di folder **`/app`**.
+
+##### 3.1. **Menambahkan Halaman MetricBot**
+
+Buat file **`/app/metricbot/page.tsx`**:
+
+```tsx
+// app/metricbot/page.tsx
+import MetricBot from '../components/MetricBot/MetricBot';
+
+const MetricBotPage: React.FC = () => {
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold mb-4">MetricBot</h1>
+      <MetricBot />
+    </div>
+  );
+};
+
+export default MetricBotPage;
+```
+
+Halaman ini akan menampilkan komponen **MetricBot** yang sudah kita buat.
+
+#### 4. **Mengintegrasikan Navigasi**
+
+Tambahkan menu **MetricBot** ke navigasi situs sehingga pengguna dapat mengakses halaman **MetricBot**.
+
+##### 4.1. **Mengupdate Navigasi**
+
+Jika Anda menggunakan **app routing**, navigasi dapat dikelola dalam komponen navigasi global.
+
+```tsx
+// app/components/Navigation.tsx
+import Link from 'next/link';
+
+const Navigation: React.FC = () => {
+  return (
+    <nav className="bg-gray-800 p-4">
+      <div className="container mx-auto flex justify-between items-center">
+        <Link href="/">
+          <a className="text-white text-lg font-bold">Home</a>
+        </Link>
+        <ul className="flex space-x-4">
+          <li>
+            <Link href="/metricbot">
+              <a className="text-white hover:text-gray-400">MetricBot</a>
+            </Link>
+          </li>
+          {/* Tambahkan menu lain di sini */}
+        </ul>
+      </div>
+    </nav>
+  );
+};
+
+export default Navigation;
+```
+
+#### 5. **Mengujinya**
+
+- **Tes Endpoint API**: Pastikan endpoint API di **`/app/api/search/route.ts`** berfungsi dengan benar.
+- **Tes ChatBot**: Pastikan ChatBot dapat melakukan pencarian blog dengan memanggil endpoint API dan menampilkan hasilnya dengan format yang benar.
+- **Cek Navigasi**: Pastikan menu **MetricBot** berfungsi dan mengarahkan pengguna ke halaman pencarian yang benar.
+
+#### Kesimpulan
+
+Pada langkah ini, kita telah:
+- Menyiapkan endpoint API untuk pencarian blog dengan app routing.
+- Mengintegrasikan API pencarian ke dalam ChatBot.
+- Menambahkan halaman **MetricBot** dan memastikan navigasi yang benar.
+- Menguji integrasi untuk memastikan fungsionalitas yang benar.

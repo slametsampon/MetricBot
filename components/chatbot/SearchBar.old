@@ -1,0 +1,41 @@
+// components/MetricBot/SearchBar.tsx
+import React, { useState } from 'react';
+import { searchBlogs } from '@/lib/searchUtils';
+
+const SearchBar: React.FC = () => {
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<any[]>([]);
+
+  const handleSearch = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const searchQuery = e.target.value;
+    setQuery(searchQuery);
+    if (searchQuery) {
+      const result = searchBlogs(searchQuery);
+      setResults(result.map(r => r.item));  // Menampilkan hanya item hasil pencarian
+    } else {
+      setResults([]);
+    }
+  };
+
+  return (
+    <div className="search-bar">
+      <input
+        type="text"
+        value={query}
+        onChange={handleSearch}
+        placeholder="Cari blog..."
+        className="search-input"
+      />
+      <ul className="search-results">
+        {results.map(result => (
+          <li key={result.id} className="search-result-item">
+            <h3>{result.title}</h3>
+            <p>{result.summary}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
+
+export default SearchBar;
