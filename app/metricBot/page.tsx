@@ -1,4 +1,5 @@
 import Chatbot from '@/components/chatbot/Chatbot'
+import SearchBar from '@/components/chatbot/SearchBar'
 import SearchBlog from '@/components/chatbot/SearchBlog'
 
 export default function ChatbotPage() {
@@ -6,7 +7,7 @@ export default function ChatbotPage() {
     <div>
       {/* <Chatbot /> */}
       <h1 className="text-2xl font-bold mb-4">Pencarian Blog di MetricBot</h1>
-      <SearchBlog /> {/* Menampilkan komponen pencarian */}
+      <SearchBar /> {/* Menampilkan komponen pencarian */}
     </div>
   )
 }

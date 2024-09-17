@@ -42,7 +42,8 @@
     "app/ui/login-form.jsx",
     "layouts/LayoutSideNavbar.jsx",
     "components/*.jsx",
-    "app/metrics/**/*.jsx"
+    "app/metrics/**/*.jsx",
+    "app/metricBot/**/*.jsx"
   ],
   "exclude": ["node_modules"]
 }

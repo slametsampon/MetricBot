@@ -1,11 +1,16 @@
+'use client'
+
 import siteMetadata from '@/data/siteMetadata'
 import headerNavLinks from '@/data/headerNavLinks'
 import Logo from '@/data/cmmsLogo.svg'
 import Link from './Link'
 import MobileNav from './MobileNav'
 import ThemeSwitch from './ThemeSwitch'
+import { usePathname } from 'next/navigation'
+import clsx from 'clsx'
 
 const Header = () => {
+  const pathname = usePathname()
   return (
     <header className="flex items-center justify-between rounded-2xl bg-blue-50 py-7 shadow-md dark:bg-gray-900">
       <div>
@@ -31,7 +36,12 @@ const Header = () => {
             <Link
               key={link.title}
               href={link.href}
-              className="link-active p-1 font-medium text-gray-900 dark:text-gray-100 sm:p-4"
+              className={clsx(
+                'link-active p-1 font-medium text-gray-900 dark:text-gray-100 sm:p-4',
+                {
+                  'bg-cyan-300 text-blue-600 rounded-full': pathname === link.href,
+                }
+              )}
             >
               {link.title}
             </Link>

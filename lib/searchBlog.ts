@@ -1,5 +1,6 @@
 import Fuse from 'fuse.js'
 import { allBlogs } from '@/.contentlayer/generated'
+import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
 
 // Konfigurasi Fuse.js dengan bobot
 const options = {
@@ -11,11 +12,13 @@ const options = {
   threshold: 0.3, // Sensitivitas pencarian
 }
 
-const fuse = new Fuse(allBlogs, options) // Membuat instance Fuse.js dengan data blog
+const sortedBlogs = sortPosts(allBlogs)
+const blogs = allCoreContent(sortedBlogs)
+const fuse = new Fuse(blogs, options) // Membuat instance Fuse.js dengan data blog
 
 // Fungsi untuk mencari blog berdasarkan query
 export const searchBlog = (query: string) => {
-  if (!query) return allBlogs // Jika query kosong, kembalikan semua blog
+  if (!query) return blogs // Jika query kosong, kembalikan semua blog
   const result = fuse.search(query)
   return result.map(({ item }) => item) // Mengembalikan hasil pencarian
 }

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { searchBlog } from '@/lib/serachBlog' // Import fungsi pencarian
+import { searchBlog } from '@/lib/searchBlog' // Import fungsi pencarian
 
 const SearchBlog = () => {
   const [query, setQuery] = useState('')
