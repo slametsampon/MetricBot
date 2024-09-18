@@ -4,14 +4,14 @@
 import React, { useState } from 'react'
 import { getFormattedBlogSummary } from '@/lib/displayUtils'
 import { searchBlogs } from '@/lib/searchUtils'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
-import { useDebouncedCallback } from 'use-debounce'
+import SearchEntry from './SearchEntry'
 
 const SearchBar: React.FC = () => {
   const [query, setQuery] = useState('')
   const [results, setResults] = useState<any[]>([])
 
-  const handleSearch = useDebouncedCallback(async (query: string) => {
+  const handleSearch = async (query: string) => {
+    setQuery(query)
     if (query) {
       const result = searchBlogs(query)
       setResults(
@@ -23,26 +23,11 @@ const SearchBar: React.FC = () => {
     } else {
       setResults([])
     }
-  }, 500)
-
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchQuery = event.target.value
-    setQuery(searchQuery)
-    handleSearch(searchQuery)
   }
 
   return (
     <div className="search-bar p-4 max-w-md mx-auto">
-      <div className="relative flex flex-1 flex-shrink-0">
-        <input
-          type="text"
-          value={query}
-          onChange={handleChange}
-          placeholder="Cari blog..."
-          className="peer block w-full rounded-md border border-gray-200 py-[9px] text-sm outline-2 placeholder:text-gray-500"
-        />
-        <MagnifyingGlassIcon className="absolute -left-5 h-[24px] w-[24px]  text-gray-500 peer-focus:text-gray-900" />
-      </div>{' '}
+      <SearchEntry onSearchChange={handleSearch} />
       <ul className="search-results mt-4">
         {results.map((result) => (
           <li
